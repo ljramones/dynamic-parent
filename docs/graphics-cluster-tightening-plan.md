@@ -18,6 +18,78 @@ This plan assumes the following strict ownership decision is now in force:
 - **DynamisGPU** is the sole owner of direct GPU/backend access, GPU resource lifecycle, upload/orchestration, and execution primitives.
 - **Feature repos** (`DynamisVFX`, `DynamisSky`, `DynamisTerrain`) own only feature-local runtime state, feature-local simulation, feature-local render-data generation, and declarative feature requirements.
 
+## Canonical Tightening Slices (Completed)
+
+### A1 — Graphics footholds
+
+Commits:
+
+- Terrain: `8cb5f2b`
+- Sky: `503234e`
+- LightEngine: `9f3885d`
+
+Purpose:
+
+- Introduced minimal LightEngine phase contract.
+- Added typed Terrain ↔ Sky seam.
+- Added internal GPU adapter seams in Terrain and Sky.
+
+### A2 — Adapter seam follow-through
+
+Commits:
+
+- Terrain: `81f7d60`
+- Sky: `96218aa`
+
+Purpose:
+
+- Routed first real backend paths through GPU adapter seams.
+- Began inversion of Terrain ↔ Sky typed seam.
+
+### A3 / B1 — Raw-handle containment
+
+Commits:
+
+- Terrain: `1714558`
+- Sky: `58cfc9b`
+- VFX: `a40d026`
+
+Purpose:
+
+- Introduced typed replacements for raw GPU handles.
+- Preserved compatibility paths.
+
+### D1 — Backend exposure reduction
+
+Commits:
+
+- Terrain: `fc3eeb1`
+- Sky: `3bae8f4`
+
+Purpose:
+
+- Reduced JPMS exports in feature Vulkan modules.
+
+### Integration Seam Tightening (LightEngine ↔ Sky)
+
+Canonical seam-only commits:
+
+- Sky seam: `200f5afb9937cfbf9e61fa8b1f8c3aed4c4ad3b1`
+- LightEngine seam: `73f8ecd9ee2fd124b5a479496a4c1f3111259c4f`
+
+Separate unrelated follow-up:
+
+- `3de5a81ce4886ecae9196ce53b96a0987b74d5fd`
+
+Purpose:
+
+- Removed LightEngine reflection into Sky LUT internals.
+- Narrowed LightEngine dependency to `VulkanSkyIntegration`.
+- Kept unrelated runtime/doc changes out of seam-only commits.
+
+Future slices must preserve compatibility and remain narrow.
+Do not combine unrelated architectural tightening work into a single commit.
+
 ## Core Architectural Rule
 
 ## DynamisGPU owns
