@@ -347,14 +347,33 @@ Outcome:
 - Updated representative integration tests to exercise the production-facing configurator path.
 - Preserved additive/non-breaking scope.
 
-### P15 — Next candidate (bounded)
+### P15 — Production-facing preferred-flow convenience preset (completed)
+
+Commit:
+
+- `e8ec3d5` (`DynamisPhysics`): added `PhysicsCollisionPreferredFlowPresets` with one representative default policy bundle around `PhysicsCollisionPreferredFlowConfigurator`
+
+Before/After/Fallback:
+
+- Before: production code could enable the preferred flow via configurator, but had to assemble policy/responder wiring manually.
+- After: `PhysicsCollisionPreferredFlowPresets.configureDefault(...)` provides one bounded production-facing convenience preset for a representative adapter shape with default seam-selection/ordering/persistence behavior.
+- Fallback: legacy/default behavior remains unchanged when preset is not used; explicit seam-selection override and fallback responder behavior remain available when preset is used.
+
+Outcome:
+
+- Added one narrow preset entrypoint without changing global defaults.
+- Added focused coverage proving default preset preferred-path behavior and explicit seam-selection override to fallback.
+- Preserved additive/non-breaking scope.
+
+### P16 — Next candidate (bounded)
 
 Target:
 
-- Add one bounded production-facing convenience preset around `PhysicsCollisionPreferredFlowConfigurator` that wires a default Physics policy bundle (selection/ordering/persistence defaults) for one representative body-adapter shape, while retaining explicit override and fallback behavior.
+- Wire one production runtime assembly entrypoint to use `PhysicsCollisionPreferredFlowPresets.configureDefault(...)` for a representative integration flow, while retaining opt-out and legacy defaults for non-adopting flows.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- No broad API deletions or package moves.
-- No behavior rewrite; only one representative convenience preset plus focused behavior coverage.
+- No global default flip; one representative runtime entrypoint only.
+- No broad solver/runtime rewrite or package restructuring.
+
