@@ -274,14 +274,32 @@ Outcome:
 - Extended `PhysicsPreferredCollisionResponder` to delegate seam selection to policy.
 - Added focused behavior coverage proving policy can force fallback even for otherwise seam-resolvable events.
 
-### P11 — Next candidate (bounded)
+### P11 — Collision-side response-path policy gate migration (completed)
+
+Commit:
+
+- `dfae62e` (`DynamisCollision`): made legacy `ContactSolver3D` special-case handling in `CollisionWorld3D.applyResponses(...)` policy-gated
+
+Before/After/Fallback:
+
+- Before: collision-transitional `applyResponses(...)` used an unconditional `ContactSolver3D` type special-case branch.
+- After: `CollisionResponsePathPolicy3D` now gates legacy special-path usage, enabling explicit representative-flow preference of non-legacy responder handling.
+- Fallback: legacy `ContactSolver3D` special-path remains default-compatible via default policy behavior.
+
+Outcome:
+
+- Added `CollisionResponsePathPolicy3D` policy contract.
+- Extended `CollisionWorld3D` with configurable response-path policy (`setResponsePathPolicy(...)`).
+- Added focused tests proving default legacy special-path behavior and policy-disabled representative-flow behavior.
+
+### P12 — Next candidate (bounded)
 
 Target:
 
-- Migrate one bounded residual orchestration responsibility in collision-transitional step path: make legacy `ContactSolver3D` special-case handling in `CollisionWorld3D.applyResponses(...)` policy-gated so Physics-preferred responder path is explicit first-class handling for one representative flow.
+- Migrate one representative integration flow to explicitly configure both sides of policy ownership together (Physics seam-selection/ordering policies + Collision response-path policy gate) as the preferred path, while retaining all legacy fallback branches.
 
 Constraints:
 
 - Additive and compatibility-preserving.
 - No broad API deletions or package moves.
-- No behavior rewrite; only one bounded orchestration responsibility migration plus focused behavior coverage.
+- No behavior rewrite; only one representative integration-flow wiring plus focused behavior coverage.
