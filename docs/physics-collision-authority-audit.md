@@ -437,17 +437,36 @@ Outcome:
 - Added focused behavior coverage proving default preferred-path behavior and explicit opt-out fallback in the non-demo consumer module.
 - Preserved additive/non-breaking scope with no global default flip.
 
-### P20 — Next candidate (bounded)
+### P20 — Single-entrypoint integration toggle (completed)
+
+Commit:
+
+- `6729952` (`DynamisAudio`): added a bounded integration-facing assembly-mode toggle in one non-demo runtime entrypoint
+
+Before/After/Fallback:
+
+- Before: non-demo consumer adopted preferred assembly path, but had no explicit integration-facing toggle to choose preferred vs legacy assembly per-entrypoint.
+- After: `PhysicsPreferredCollisionWorldFactory.createForRuntime(..., CollisionWorldAssemblyMode mode)` provides one bounded entrypoint toggle between `PHYSICS_PREFERRED` and `LEGACY` assembly modes.
+- Fallback: `LEGACY` mode preserves explicit legacy responder assembly; existing defaults for non-adopting callsites remain unchanged.
+
+Outcome:
+
+- Added one narrow integration-facing toggle in a single entrypoint, without broad rollout.
+- Added focused behavior coverage proving both preferred and legacy mode paths.
+- Preserved additive/non-breaking scope with no global default flip.
+
+### P21 — Next candidate (bounded)
 
 Target:
 
-- Adopt the preferred-flow assembly path in one additional primary runtime integration entrypoint and add a small integration-facing configuration toggle path to select preferred vs legacy assembly without changing global defaults.
+- Introduce one lightweight integration configuration binding in a single consumer bootstrap path that selects `CollisionWorldAssemblyMode` from config/runtime flags and feeds that into `createForRuntime(...)`, keeping fallback and non-adopting defaults unchanged.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- One additional entrypoint only; no broad rollout.
+- One bootstrap binding path only; no broad rollout.
 - No solver/runtime rewrite and no global default behavior change.
+
 
 
 
