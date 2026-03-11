@@ -99,3 +99,31 @@ Execute a targeted **Physics ↔ Collision authority re-seam slice** (no broad r
 ## Recommendation
 
 Proceed with a narrow implementation slice for seam correction before broader repo-by-repo reviews. This seam is now the highest-signal authority hotspot outside the graphics cluster.
+
+## Canonical Tightening Slices
+
+### P1 — Physics ↔ Collision authority foothold (completed)
+
+Commits:
+
+- `f001d6f` (`dynamis-parent`): added audit baseline
+- `ef90c76` (`DynamisPhysics`): added Physics-owned collision contact seam
+- `94ed32a` (`DynamisCollision`): marked collision-side simulation paths as transitional
+
+Outcome:
+
+- Physics now has an explicit contact-consumption/resolution seam (`DetectedCollisionContact`, `PhysicsContactResolver`, `PhysicsContactResolutionStrategy`).
+- Collision overlap constructs are explicitly transitional (`CollisionWorld3D.step`, `ContactSolver3D`, `PhysicsStep3D`).
+- Compatibility is preserved; no broad solver/runtime rewrite was performed.
+
+### P2 — First legacy contact flow migration (next)
+
+Target:
+
+- Migrate one representative legacy contact-resolution path from collision-transitional flow to the Physics-owned seam.
+
+Constraints:
+
+- Additive and compatibility-preserving.
+- No broad API deletions or package moves.
+- No behavior rewrite; only authority-direction correction for one flow.
