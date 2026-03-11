@@ -292,14 +292,33 @@ Outcome:
 - Extended `CollisionWorld3D` with configurable response-path policy (`setResponsePathPolicy(...)`).
 - Added focused tests proving default legacy special-path behavior and policy-disabled representative-flow behavior.
 
-### P12 — Next candidate (bounded)
+### P12 — Representative preferred-flow integration wiring (completed)
+
+Commits:
+
+- `dfae62e` (`DynamisCollision`): collision-side response-path policy gate
+- `cdda2dc` (`DynamisPhysics`): representative Physics-preferred integration-flow coverage
+
+Before/After/Fallback:
+
+- Before: policy components existed, but representative integration proof of composed preferred flow was fragmented.
+- After: representative Physics-preferred integration flow is covered with configured seam policies and explicit fallback behavior, while collision-side policy gate behavior is validated in Collision tests.
+- Fallback: legacy paths remain intact and explicitly test-covered.
+
+Outcome:
+
+- Added representative integration-flow test coverage in Physics (`PhysicsCollisionPreferredFlowIntegrationTest`) proving configured seam-policy execution and fallback routing.
+- Kept collision-side response-path policy gate validated in Collision tests from P11.
+- Documented cross-repo API-version constraint: Physics currently compiles against released `org.dynamiscollision` API, so direct `setResponsePathPolicy(...)` wiring in Physics code remains pending aligned dependency adoption.
+
+### P13 — Next candidate (bounded)
 
 Target:
 
-- Migrate one representative integration flow to explicitly configure both sides of policy ownership together (Physics seam-selection/ordering policies + Collision response-path policy gate) as the preferred path, while retaining all legacy fallback branches.
+- Perform one bounded dependency-alignment slice so Physics can consume the updated collision policy-gate API (`setResponsePathPolicy(...)`) in a representative integration path, while retaining legacy fallback defaults.
 
 Constraints:
 
 - Additive and compatibility-preserving.
 - No broad API deletions or package moves.
-- No behavior rewrite; only one representative integration-flow wiring plus focused behavior coverage.
+- No behavior rewrite; only one representative integration wiring plus focused behavior coverage after dependency alignment.
