@@ -219,14 +219,33 @@ Outcome:
 - Extended `PhysicsPreferredCollisionResponder` to notify Physics-owned cache policy per collision event, enabling explicit EXIT invalidation.
 - Added focused behavior coverage proving seam-first warm-start policy use and cache invalidation fallback behavior.
 
-### P8 — Next candidate (bounded)
+### P8 — Warm-start persistence update preference migration (completed)
+
+Commit:
+
+- `ba79f93` (`DynamisPhysics`): moved post-resolution warm-start persistence update preference into Physics-owned orchestration bridge
+
+Before/After/Fallback:
+
+- Before: post-resolution warm-start persistence update behavior was not explicitly Physics-owned at the step-path bridge level.
+- After: `PhysicsPreferredCollisionResponder` now owns seam-path post-resolution persistence update preference via `PhysicsWarmStartPersistenceStrategy`.
+- Fallback: legacy collision-side cache update behavior remains available as compatibility fallback.
+
+Outcome:
+
+- Added Physics-owned `PhysicsWarmStartPersistenceStrategy` contract.
+- Extended `PhysicsPreferredCollisionResponder` with seam-path persistence-update orchestration (`load before`, `update after`, `store preferred`).
+- Kept policy-backed warm-start strategy focused on application behavior, with persistence update preference moved to orchestration boundary.
+- Added focused behavior coverage proving seam-path load/store/update preference on resolvable events.
+
+### P9 — Next candidate (bounded)
 
 Target:
 
-- Migrate one additional bounded step-path responsibility: prefer Physics-owned warm-start persistence update path after seam resolution, with legacy cache update retained as explicit fallback.
+- Migrate one additional bounded orchestration responsibility so Physics-owned seam policy controls fixed-step responder ordering for one representative flow, with legacy collision ordering retained as explicit fallback.
 
 Constraints:
 
 - Additive and compatibility-preserving.
 - No broad API deletions or package moves.
-- No behavior rewrite; only one bounded orchestration/persistence responsibility migration plus focused behavior/parity coverage.
+- No behavior rewrite; only one bounded orchestration responsibility migration plus focused behavior coverage.
