@@ -365,15 +365,34 @@ Outcome:
 - Added focused coverage proving default preset preferred-path behavior and explicit seam-selection override to fallback.
 - Preserved additive/non-breaking scope.
 
-### P16 — Next candidate (bounded)
+### P16 — Production-entrypoint preset wiring (completed)
+
+Commit:
+
+- `a96cbbb` (`DynamisPhysics`): wired the production-facing configurator entrypoint to consume the P15 default preset bundle
+
+Before/After/Fallback:
+
+- Before: the convenience preset existed, but production callers had to choose between low-level configurator wiring or calling preset helpers directly.
+- After: `PhysicsCollisionPreferredFlowConfigurator.configureDefault(...)` is a production-facing runtime assembly entrypoint that applies the representative default preset wiring for one adapter shape.
+- Fallback: legacy/default behavior remains unchanged when configurator is not applied; explicit seam-selection override and fallback responder routing remain available via configurator overloads.
+
+Outcome:
+
+- Added one bounded production assembly surface that now routes through preset-based preferred-flow wiring.
+- Updated focused integration coverage to exercise configurator default + override entrypoints.
+- Preserved additive/non-breaking scope with no global default flip.
+
+### P17 — Next candidate (bounded)
 
 Target:
 
-- Wire one production runtime assembly entrypoint to use `PhysicsCollisionPreferredFlowPresets.configureDefault(...)` for a representative integration flow, while retaining opt-out and legacy defaults for non-adopting flows.
+- Adopt `PhysicsCollisionPreferredFlowConfigurator.configureDefault(...)` in one concrete non-test runtime composition callsite (outside seam-focused integration tests), with explicit opt-out and legacy defaults retained for non-adopting flows.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- No global default flip; one representative runtime entrypoint only.
-- No broad solver/runtime rewrite or package restructuring.
+- One concrete consumer callsite only; no broad rollout.
+- No solver/runtime rewrite and no global default behavior change.
+
 
