@@ -311,14 +311,32 @@ Outcome:
 - Kept collision-side response-path policy gate validated in Collision tests from P11.
 - Documented cross-repo API-version constraint: Physics currently compiles against released `org.dynamiscollision` API, so direct `setResponsePathPolicy(...)` wiring in Physics code remains pending aligned dependency adoption.
 
-### P13 — Next candidate (bounded)
+### P13 — Dependency-aligned representative direct wiring (completed)
+
+Commits / alignment action:
+
+- `5d79308` (`DynamisPhysics`): representative Physics integration flow now directly configures `CollisionWorld3D.setResponsePathPolicy(...)`.
+- Local dependency alignment action: installed updated `collision_detection` artifact (`1.1.1`) from `DynamisCollision` so Physics compiles against the policy-gate API.
+
+Before/After/Fallback:
+
+- Before: representative Physics integration test could not directly wire `setResponsePathPolicy(...)` due cross-repo API version mismatch.
+- After: representative Physics flow directly wires collision response-path policy gate along with Physics seam policies.
+- Fallback: legacy fallback branches remain unchanged and explicit.
+
+Outcome:
+
+- Closed the representative direct-wiring gap identified in P12.
+- Preserved bounded scope (test/integration wiring only; no broad behavior rewrite).
+
+### P14 — Next candidate (bounded)
 
 Target:
 
-- Perform one bounded dependency-alignment slice so Physics can consume the updated collision policy-gate API (`setResponsePathPolicy(...)`) in a representative integration path, while retaining legacy fallback defaults.
+- Evaluate whether one production-facing representative integration entrypoint (not test-only) should adopt the same composed preferred-path wiring as demonstrated in P13, while retaining legacy fallback defaults.
 
 Constraints:
 
 - Additive and compatibility-preserving.
 - No broad API deletions or package moves.
-- No behavior rewrite; only one representative integration wiring plus focused behavior coverage after dependency alignment.
+- No behavior rewrite; only one representative production-facing wiring candidate plus focused behavior coverage.
