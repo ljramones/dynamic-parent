@@ -419,17 +419,36 @@ Outcome:
 - Added focused coverage proving default preferred-path behavior and explicit opt-out fallback behavior in the external consumer module.
 - Preserved additive/non-breaking scope with no global default flip.
 
-### P19 — Next candidate (bounded)
+### P19 — Primary non-demo consumer adoption (completed)
+
+Commit:
+
+- `9f80dc6` (`DynamisAudio`): adopted preferred-flow assembly path in one primary non-demo runtime consumer via `dynamis-audio-simulation`
+
+Before/After/Fallback:
+
+- Before: non-demo runtime consumers outside `DynamisPhysics` had no concrete callsite using Physics-preferred collision-world assembly defaults.
+- After: `io.dynamis.audio.simulation.PhysicsPreferredCollisionWorldFactory.create(...)` now provides a concrete non-demo consumer callsite delegating to `PhysicsCollisionWorldAssemblies.createWithPreferredDefaults(...)`.
+- Fallback: explicit seam-selection override remains available via factory overload; non-adopting flows remain unchanged.
+
+Outcome:
+
+- Added one bounded non-demo external consumer adoption callsite (single repo, single callsite).
+- Added focused behavior coverage proving default preferred-path behavior and explicit opt-out fallback in the non-demo consumer module.
+- Preserved additive/non-breaking scope with no global default flip.
+
+### P20 — Next candidate (bounded)
 
 Target:
 
-- Adopt the same preferred-flow assembly path in one primary non-demo runtime consumer (outside `DynamisPhysics`), after minimal dependency alignment if required, while preserving explicit opt-out and legacy defaults.
+- Adopt the preferred-flow assembly path in one additional primary runtime integration entrypoint and add a small integration-facing configuration toggle path to select preferred vs legacy assembly without changing global defaults.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- One consumer integration only; no broad rollout.
+- One additional entrypoint only; no broad rollout.
 - No solver/runtime rewrite and no global default behavior change.
+
 
 
 
