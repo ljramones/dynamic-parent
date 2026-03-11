@@ -383,16 +383,35 @@ Outcome:
 - Updated focused integration coverage to exercise configurator default + override entrypoints.
 - Preserved additive/non-breaking scope with no global default flip.
 
-### P17 — Next candidate (bounded)
+### P17 — Non-test runtime composition adoption (completed)
+
+Commit:
+
+- `c735076` (`DynamisPhysics`): added `PhysicsCollisionWorldAssemblies` as a concrete non-test runtime composition callsite using `PhysicsCollisionPreferredFlowConfigurator.configureDefault(...)`
+
+Before/After/Fallback:
+
+- Before: preferred-flow default wiring was exposed via configurator/preset entrypoints, but no concrete non-test runtime composition helper consumed that path.
+- After: `PhysicsCollisionWorldAssemblies.createWithPreferredDefaults(...)` constructs `CollisionWorld3D` and applies configurator default wiring in one production-facing composition callsite.
+- Fallback: explicit opt-out remains available via seam-selection override overload; legacy/default behavior remains unchanged for non-adopting flows.
+
+Outcome:
+
+- Added one bounded, non-test runtime assembly adoption callsite for the preferred path.
+- Added focused integration coverage for assembly default-path behavior and explicit opt-out fallback routing.
+- Preserved additive/non-breaking scope with no global default flip.
+
+### P18 — Next candidate (bounded)
 
 Target:
 
-- Adopt `PhysicsCollisionPreferredFlowConfigurator.configureDefault(...)` in one concrete non-test runtime composition callsite (outside seam-focused integration tests), with explicit opt-out and legacy defaults retained for non-adopting flows.
+- Adopt `PhysicsCollisionWorldAssemblies.createWithPreferredDefaults(...)` in one concrete cross-repo runtime consumer (outside `DynamisPhysics`) and verify opt-out path remains available.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- One concrete consumer callsite only; no broad rollout.
+- One consumer integration only; no broad rollout across callsites.
 - No solver/runtime rewrite and no global default behavior change.
+
 
 
