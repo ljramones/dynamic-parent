@@ -101,6 +101,20 @@ Purpose:
 - Proposed safe staged `module-info.java` introduction (API-first, then core/vulkan).
 - Recorded explicit deferrals so JPMS does not freeze transitional seams.
 
+
+### Phase E1 — VFX JPMS Stage 1
+
+Commit:
+
+- VFX JPMS stage 1: `a5ca7a1`
+
+Purpose:
+
+- Added minimal `module-info.java` for `dynamisvfx-api` only.
+- Exported only `org.dynamisvfx.api`.
+- Added only required JPMS dependency for current API types (`dynamis.gpu.api`).
+- Left `dynamisvfx-core` and `dynamisvfx-vulkan` without JPMS descriptors (deferred).
+
 Future slices must preserve compatibility and remain narrow.
 Do not combine unrelated architectural tightening work into a single commit.
 
