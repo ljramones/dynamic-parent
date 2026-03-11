@@ -455,17 +455,36 @@ Outcome:
 - Added focused behavior coverage proving both preferred and legacy mode paths.
 - Preserved additive/non-breaking scope with no global default flip.
 
-### P21 — Next candidate (bounded)
+### P21 — Runtime-config binding for assembly mode (completed)
+
+Commit:
+
+- `5eb402d` (`DynamisAudio`): bound assembly-mode selection to one runtime config source in a single non-demo consumer entrypoint
+
+Before/After/Fallback:
+
+- Before: `createForRuntime(...)` required explicit mode selection by caller; no config-bound mode resolution existed.
+- After: `PhysicsPreferredCollisionWorldFactory.createFromRuntimeConfig(...)` resolves mode from one runtime property (`dynamis.audio.collision.assembly`) and routes through `createForRuntime(...)`.
+- Fallback: missing/invalid property values resolve to `LEGACY`, preserving defaults; non-adopting callsites remain unchanged.
+
+Outcome:
+
+- Added one lightweight config binding path in a single consumer entrypoint.
+- Added focused coverage for unset/default, preferred-configured, and invalid-config fallback behavior.
+- Preserved additive/non-breaking scope with no global default flip.
+
+### P22 — Next candidate (bounded)
 
 Target:
 
-- Introduce one lightweight integration configuration binding in a single consumer bootstrap path that selects `CollisionWorldAssemblyMode` from config/runtime flags and feeds that into `createForRuntime(...)`, keeping fallback and non-adopting defaults unchanged.
+- Add one explicit integration wiring callsite in `dynamis-audio-simulation` that uses `createFromRuntimeConfig(...)` from a concrete bootstrap/helper path (not only factory unit tests), while retaining existing non-adopting paths and defaults.
 
 Constraints:
 
 - Additive and compatibility-preserving.
-- One bootstrap binding path only; no broad rollout.
+- One additional wiring callsite only; no broad rollout.
 - No solver/runtime rewrite and no global default behavior change.
+
 
 
 
