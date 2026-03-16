@@ -559,15 +559,15 @@ DynamisWorldEngine  integration-heavy — needs reference app for meaningful tes
 
 ---
 
-### JPMS Adoption
+### JPMS Adoption (**COMPLETE** — 2026-03-16)
 
-DynamisLightEngine is the only major subsystem without `module-info.java` files. All other subsystems have full JPMS coverage.
+All major subsystems now have `module-info.java` files. DynamisLightEngine was the last to be migrated (8 module descriptors added). ServiceLoader backend discovery formalized with `provides`/`uses` declarations. Remaining without JPMS: DynamisGPU, MeshForge, DynamisECS, DynamisSceneGraph, DynamisSession (consumed as automatic modules).
 
 ---
 
 ### Integration Patterns
 
-* **Reflection-based feature bridges** in DynamisLightEngine (Sky/VFX via `Class.forName()`) are fragile. Consider migrating to ServiceLoader pattern.
+* **Reflection-based feature bridges** in DynamisLightEngine (Sky via `Class.forName()`, upscaler vendors via `Class.forName()`) remain. Consider migrating to ServiceLoader pattern for cleaner JPMS integration.
 * DynamisAudio collision assembly examples should move to reference application.
 
 ---
@@ -671,9 +671,22 @@ OpenGlEngineRuntime   2,370 lines — testable after decomposition
 
 ---
 
-### Program 6 — DynamisLightEngine JPMS Migration
+### Program 6 — DynamisLightEngine JPMS Migration (**DONE**)
 
-Add `module-info.java` to all LightEngine modules. Only major subsystem without JPMS boundary enforcement. Consider migrating reflection-based Sky/VFX bridges to ServiceLoader.
+All 8 LightEngine modules now have `module-info.java` (2026-03-16):
+
+```
+org.dynamisengine.light.api              exports public contracts
+org.dynamisengine.light.spi              uses EngineBackendProvider (ServiceLoader)
+org.dynamisengine.light.impl.common      qualified exports to backend modules
+org.dynamisengine.light.impl.opengl      provides EngineBackendProvider
+org.dynamisengine.light.impl.vulkan      provides EngineBackendProvider
+org.dynamisengine.light.bridge.dynamisfx JavaFX integration bridge
+org.dynamisengine.light.demos            demo applications
+org.dynamisengine.light.sample           reference host
+```
+
+Remaining: DynamisGPU, MeshForge, ECS, SceneGraph, Session still lack module-info.java (consumed as automatic modules). Reflection bridges (Sky, upscalers) still use Class.forName — ServiceLoader migration deferred.
 
 ---
 
@@ -710,12 +723,13 @@ The 2026-03-15 audit verified that DynamisAI and DynamisScripting — previously
 
 Remaining work is **code quality**, not architecture:
 * Large-file decomposition Phase 2: OpenGlEngineRuntime (2,370 lines), VulkanMainPipelineBuilder (1,467 lines)
-* JPMS adoption in DynamisLightEngine (only major subsystem without module-info.java)
-* Reflection bridges → ServiceLoader migration in DynamisLightEngine
+* JPMS adoption for Layer 2-3 modules (DynamisGPU, MeshForge, ECS, SceneGraph, Session)
+* Reflection bridges → ServiceLoader migration (Sky bridge, upscaler vendors)
 * Incomplete implementations (DynamisAudio native device, DynamisTerrain physics integration)
 * Reference application to host cross-subsystem integration examples
 
 Completed since last report:
 * OpenGlContext decomposed: 3,553 → 1,618 lines (6 extracted classes)
 * Test coverage expanded: VFX (9→123), Sky (15→128), Terrain (19→168)
+* JPMS migration: DynamisLightEngine now has module-info.java across all 8 submodules
 * Package standardization and monorepo reorganization verified via full-system build
