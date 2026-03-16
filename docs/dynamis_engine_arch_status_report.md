@@ -605,7 +605,7 @@ Note: DynamisExpression mvel-main has 156 pre-existing test failures unrelated t
 DynamisAudio        PanamaAudioDevice           Phase 0 — native calls stubbed (WASAPI/CoreAudio/ALSA)
 DynamisAudio        dynamis-audio-music          declared in POM but module not yet created
 DynamisAudio        dynamis-audio-procedural     declared in POM but module not yet created
-DynamisTerrain      physics/meshforge modules    requires commented out, blocking full integration
+DynamisTerrain      physics/meshforge modules    requires uncommented with correct module names — DONE
 DynamisExpression   thread safety                ClassManager, LambdaRegistry, MVEL.get() not thread-safe (alpha)
 ```
 
@@ -615,8 +615,8 @@ DynamisExpression   thread safety                ClassManager, LambdaRegistry, M
 
 ```
 Vectrix             SpotBugs not configured      (unlike Core and Event)
-DynamisSky          KelvinToRgb TODO             should upstream color science to Vectrix
-DynamisCore         lifecycle exceptions          DynamisInitException etc. encode runtime policy; consider moving to orchestrator
+DynamisSky          KelvinToRgb TODO             DONE — upstreamed to Vectrix ColorSciencef
+DynamisCore         lifecycle exceptions          DONE — moved to WorldEngine api.lifecycle
 fastnoiselitenouveau non-standard src dir         uses src/main/Java (capitalized)
 ```
 
@@ -758,7 +758,7 @@ Remaining work is **code quality**, not architecture:
 * Large-file decomposition Phase 2: OpenGlEngineRuntime (2,370 lines), VulkanMainPipelineBuilder (1,467 lines)
 * ~~JPMS adoption~~ — **COMPLETE engine-wide** (all layers 1-7 have module-info.java)
 * Reflection bridges → ServiceLoader migration (Sky bridge, upscaler vendors)
-* Incomplete implementations (DynamisAudio native device, DynamisTerrain physics integration)
+* Incomplete implementations (DynamisAudio native device)
 * Reference application to host cross-subsystem integration examples
 
 Completed since last report:
@@ -766,3 +766,6 @@ Completed since last report:
 * Test coverage expanded: VFX (9→123), Sky (15→128), Terrain (19→168), Audio (→462), UI (→98), WorldEngine (→45)
 * JPMS migration: complete across all engine layers (1-7), every subsystem has module-info.java
 * Package standardization and monorepo reorganization verified via full-system build
+* Hygiene: KelvinToRgb upstreamed from DynamisSky to Vectrix ColorSciencef
+* Hygiene: DynamisTerrain physics/meshforge module requires uncommented with correct module names
+* Hygiene: DynamisCore lifecycle exceptions moved to WorldEngine api.lifecycle
