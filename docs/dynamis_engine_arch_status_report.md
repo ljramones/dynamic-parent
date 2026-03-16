@@ -559,9 +559,27 @@ DynamisWorldEngine  integration-heavy — needs reference app for meaningful tes
 
 ---
 
-### JPMS Adoption (**COMPLETE** — 2026-03-16)
+### JPMS Adoption (**COMPLETE — Engine-Wide** — 2026-03-16)
 
-All major subsystems now have `module-info.java` files. DynamisLightEngine was migrated first (8 module descriptors added), followed by Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession). ServiceLoader backend discovery formalized with `provides`/`uses` declarations. All previously automatic modules now have explicit module descriptors.
+All engine subsystems now have `module-info.java` files. JPMS migration is complete across all seven layers:
+
+```
+Layer 1: DynamisCore, DynamisEvent, Vectrix                          — already modular
+Layer 2: DynamisGPU, MeshForge, Animis, DynamisCollision             — complete
+Layer 3: DynamisECS, DynamisSceneGraph, DynamisSession,
+         DynamisContent, DynamisAssetPipeline                        — complete
+Layer 4: DynamisLightEngine (8 modules), DynamisSky, DynamisTerrain,
+         DynamisVFX, DynamisAudio                                    — complete
+Layer 5: DynamisScripting, DynamisAI, DynamisPhysics,
+         DynamisExpression (mvel-main, mvel-benchmarks)              — complete
+Layer 6: DynamisUI (including demos), DynamisInput, DynamisWindow,
+         DynamisLocalization                                         — complete
+Layer 7: DynamisWorldEngine                                          — complete
+```
+
+DynamisLightEngine was migrated first (8 module descriptors), followed by Layers 2-3 (DynamisGPU, MeshForge, ECS, SceneGraph, Session), and finally Layers 4-7. ServiceLoader backend discovery formalized with `provides`/`uses` declarations. All previously automatic modules now have explicit module descriptors.
+
+Note: DynamisExpression mvel-main has 156 pre-existing test failures unrelated to JPMS (alpha-stage transpiler).
 
 ---
 
@@ -671,22 +689,20 @@ OpenGlEngineRuntime   2,370 lines — testable after decomposition
 
 ---
 
-### Program 6 — DynamisLightEngine JPMS Migration (**DONE**)
+### Program 6 — JPMS Migration (**DONE — Engine-Wide**)
 
-All 8 LightEngine modules now have `module-info.java` (2026-03-16):
+JPMS migration is now complete across all engine layers (2026-03-16). DynamisLightEngine was migrated first (8 module descriptors), followed by progressive rollout through all remaining layers:
 
 ```
-org.dynamisengine.light.api              exports public contracts
-org.dynamisengine.light.spi              uses EngineBackendProvider (ServiceLoader)
-org.dynamisengine.light.impl.common      qualified exports to backend modules
-org.dynamisengine.light.impl.opengl      provides EngineBackendProvider
-org.dynamisengine.light.impl.vulkan      provides EngineBackendProvider
-org.dynamisengine.light.bridge.dynamisfx JavaFX integration bridge
-org.dynamisengine.light.demos            demo applications
-org.dynamisengine.light.sample           reference host
+Layer 4: DynamisLightEngine (8 modules), DynamisSky, DynamisTerrain, DynamisVFX, DynamisAudio
+Layer 5: DynamisScripting, DynamisAI, DynamisPhysics, DynamisExpression (mvel-main, mvel-benchmarks)
+Layer 6: DynamisUI (including demos), DynamisInput, DynamisWindow, DynamisLocalization
+Layer 7: DynamisWorldEngine
 ```
 
-Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession) JPMS migration now COMPLETE — all submodules have module-info.java (2026-03-16). Reflection bridges (Sky, upscalers) still use Class.forName — ServiceLoader migration deferred.
+Combined with prior Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession) work, every engine subsystem now has explicit module-info.java. Reflection bridges (Sky, upscalers) still use Class.forName — ServiceLoader migration deferred.
+
+Note: DynamisExpression mvel-main has 156 pre-existing test failures unrelated to JPMS.
 
 ---
 
@@ -723,7 +739,7 @@ The 2026-03-15 audit verified that DynamisAI and DynamisScripting — previously
 
 Remaining work is **code quality**, not architecture:
 * Large-file decomposition Phase 2: OpenGlEngineRuntime (2,370 lines), VulkanMainPipelineBuilder (1,467 lines)
-* ~~JPMS adoption for Layer 2-3 modules~~ — **COMPLETE** (DynamisGPU, MeshForge, ECS, SceneGraph, Session all have module-info.java)
+* ~~JPMS adoption~~ — **COMPLETE engine-wide** (all layers 1-7 have module-info.java)
 * Reflection bridges → ServiceLoader migration (Sky bridge, upscaler vendors)
 * Incomplete implementations (DynamisAudio native device, DynamisTerrain physics integration)
 * Reference application to host cross-subsystem integration examples
@@ -731,6 +747,5 @@ Remaining work is **code quality**, not architecture:
 Completed since last report:
 * OpenGlContext decomposed: 3,553 → 1,618 lines (6 extracted classes)
 * Test coverage expanded: VFX (9→123), Sky (15→128), Terrain (19→168)
-* JPMS migration: DynamisLightEngine now has module-info.java across all 8 submodules
+* JPMS migration: complete across all engine layers (1-7), every subsystem has module-info.java
 * Package standardization and monorepo reorganization verified via full-system build
-* JPMS migration: Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession) now have module-info.java across all submodules
