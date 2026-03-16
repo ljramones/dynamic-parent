@@ -594,7 +594,10 @@ Note: DynamisExpression mvel-main has 156 pre-existing test failures unrelated t
 
 ### Integration Patterns
 
-* **Reflection-based feature bridges** in DynamisLightEngine (Sky via `Class.forName()`, upscaler vendors via `Class.forName()`) remain. Consider migrating to ServiceLoader pattern for cleaner JPMS integration.
+* ~~**Reflection-based feature bridges** in DynamisLightEngine~~ — **DONE** (2026-03-16). All three bridges migrated:
+  - `ExternalUpscalerBridge`: migrated to ServiceLoader with config fallback
+  - `VendorUpscalerSdkProvider`: migrated to ServiceLoader with config fallback
+  - `VulkanSkyRuntimeBridge`: replaced all reflection with typed `SkyRenderBridge` SPI + ServiceLoader; DynamisSky provides `SkyRenderBridgeProvider`
 * DynamisAudio collision assembly examples should move to reference application.
 
 ---
@@ -717,7 +720,7 @@ Layer 6: DynamisUI (including demos), DynamisInput, DynamisWindow, DynamisLocali
 Layer 7: DynamisWorldEngine
 ```
 
-Combined with prior Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession) work, every engine subsystem now has explicit module-info.java. Reflection bridges (Sky, upscalers) still use Class.forName — ServiceLoader migration deferred.
+Combined with prior Layer 2 (DynamisGPU, MeshForge) and Layer 3 (DynamisECS, DynamisSceneGraph, DynamisSession) work, every engine subsystem now has explicit module-info.java. Reflection bridges (Sky, upscalers) have been migrated to ServiceLoader (2026-03-16).
 
 Note: DynamisExpression mvel-main has 156 pre-existing test failures unrelated to JPMS.
 
@@ -757,7 +760,7 @@ The 2026-03-15 audit verified that DynamisAI and DynamisScripting — previously
 Remaining work is **code quality**, not architecture:
 * Large-file decomposition Phase 2: OpenGlEngineRuntime (2,370 lines), VulkanMainPipelineBuilder (1,467 lines)
 * ~~JPMS adoption~~ — **COMPLETE engine-wide** (all layers 1-7 have module-info.java)
-* Reflection bridges → ServiceLoader migration (Sky bridge, upscaler vendors)
+* ~~Reflection bridges → ServiceLoader migration~~ — **COMPLETE** (ExternalUpscalerBridge, VendorUpscalerSdkProvider, VulkanSkyRuntimeBridge)
 * Incomplete implementations (DynamisAudio native device)
 * Reference application to host cross-subsystem integration examples
 
@@ -769,3 +772,4 @@ Completed since last report:
 * Hygiene: KelvinToRgb upstreamed from DynamisSky to Vectrix ColorSciencef
 * Hygiene: DynamisTerrain physics/meshforge module requires uncommented with correct module names
 * Hygiene: DynamisCore lifecycle exceptions moved to WorldEngine api.lifecycle
+* ServiceLoader migration: ExternalUpscalerBridge, VendorUpscalerSdkProvider, VulkanSkyRuntimeBridge — all reflection-based bridges eliminated
