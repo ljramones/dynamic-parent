@@ -6,7 +6,7 @@ This is meant to be the **architectural snapshot of the engine right now**, not 
 
 # Dynamis Engine Architecture Status Report
 
-Date: 2026-03-15
+Date: 2026-03-16
 Scope: System-wide subsystem boundary ratification synthesis + package standardization
 
 ---
@@ -549,12 +549,21 @@ DynamisSky         15 → 128 tests   (solar position, sky models, color convers
 DynamisTerrain     19 → 168 tests   (frustum culling, matrix math, heightmap ops, road mesh, material atlas)
 ```
 
+**Expanded (2026-03-16):**
+
+```
+DynamisAudio        → 462 tests     (85 new: GainNode, CompressorNode, EqNode, FingerprintDrivenReverbNode,
+                                      EmitterParams, ReverbWetGainCalculator, FingerprintBlender, LinearResampler)
+DynamisUI           → 98 tests      (32 new: FlowLayout, StackLayout, Label, PerformanceOverlay,
+                                      event routing edge cases, Bounds extensions)
+DynamisWorldEngine  → 45 tests      (36 new: DefaultWorldTickRunner, DefaultWorldProjector,
+                                      DefaultWorldBootstrapper, CodecRoundtrip)
+```
+
 **Remaining gaps:**
 
 ```
-DynamisAudio        minimal test coverage — native device stubs not yet testable
-DynamisUI           test coverage unknown — needs audit
-DynamisWorldEngine  integration-heavy — needs reference app for meaningful tests
+OpenGlEngineRuntime   2,370 lines — testable after decomposition
 ```
 
 ---
@@ -665,7 +674,7 @@ VulkanMainPipelineBuilder.java 1,467 lines  → extract pass-specific builders
 
 ---
 
-### Program 5 — Test Coverage Expansion (**DONE for VFX, Sky, Terrain**)
+### Program 5 — Test Coverage Expansion (**DONE for VFX, Sky, Terrain, Audio, UI, WorldEngine**)
 
 Completed (2026-03-15):
 
@@ -678,12 +687,20 @@ DynamisTerrain   19 → 168 tests   Frustum, Matrix4f, HeightmapOps, ProceduralH
                                    RoadMeshGenerator, ScatterRuleEngine, TerrainMaterialAtlas
 ```
 
+Expanded (2026-03-16):
+
+```
+DynamisAudio       → 462 tests   GainNode, CompressorNode, EqNode, FingerprintDrivenReverbNode,
+                                  EmitterParams, ReverbWetGainCalculator, FingerprintBlender, LinearResampler
+DynamisUI          → 98 tests    FlowLayout, StackLayout, Label, PerformanceOverlay,
+                                  event routing edge cases, Bounds extensions
+DynamisWorldEngine → 45 tests    DefaultWorldTickRunner, DefaultWorldProjector,
+                                  DefaultWorldBootstrapper, CodecRoundtrip
+```
+
 **Remaining targets:**
 
 ```
-DynamisAudio          native device layer not yet testable (Panama stubs)
-DynamisUI             needs coverage audit
-DynamisWorldEngine    integration-heavy, needs reference app
 OpenGlEngineRuntime   2,370 lines — testable after decomposition
 ```
 
@@ -746,6 +763,6 @@ Remaining work is **code quality**, not architecture:
 
 Completed since last report:
 * OpenGlContext decomposed: 3,553 → 1,618 lines (6 extracted classes)
-* Test coverage expanded: VFX (9→123), Sky (15→128), Terrain (19→168)
+* Test coverage expanded: VFX (9→123), Sky (15→128), Terrain (19→168), Audio (→462), UI (→98), WorldEngine (→45)
 * JPMS migration: complete across all engine layers (1-7), every subsystem has module-info.java
 * Package standardization and monorepo reorganization verified via full-system build
